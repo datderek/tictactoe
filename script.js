@@ -5,6 +5,64 @@ const GameBoard = (function() {
     [null, null, null]
   ];
 
+  function winByRow(tile, row) {
+    for (let i = 0; i < 3; i++) {
+      if (board[row][i] !== tile) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  function winByColumn(tile, col) {
+    for (let i = 0; i < 3; i++) {
+      if (board[i][col] !== tile) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  function winByDiagonal(tile, row, col) {
+    /*
+     * Check backslash diagonal
+     */
+    let backslashWin = true;
+    for (let i = 0; i < 3; i++) {
+      if (board[i][i] !== tile) {
+        backslashWin = false;
+        break;
+      }
+    }
+
+    if (backslashWin) {
+      return true;
+    }
+
+    /*
+     * Check forward slash diagonal
+     */
+    for (let i = 0; i < 3; i++) {
+      if (board[2 - i][i] !== tile) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  /*
+   * Checks if the tile placed at board[row][column] will result in a win via
+   * a DFS in each direction
+   */
+  function checkWin(tile, row, col) {
+    return (winByRow(tile, row)
+            || winByColumn(tile, col) 
+            || winByDiagonal(tile, row, col));
+  }
+
   /*
    * Places a tile at the provided cell if the cell is free, otherwise prompts
    * the user to choose a different spot.
@@ -17,11 +75,12 @@ const GameBoard = (function() {
     }
 
     board[row][column] = tile;
-    tilesPlaced++;
     console.log(board[0]);
     console.log(board[1]);
     console.log(board[2]);
+    checkWin(tile, row, column);
   }
 
   return { place };
 })();
+
