@@ -106,7 +106,8 @@ const Game = (function() {
 
   /*
    * Updates the game status by checking if a player has won based on the most
-   * recent move or if the game ended in a tie
+   * recent move or if the game ended in a tie. If no end condition is reached,
+   * then switches to the next player.
    */
   function updateGameStatus(tile, row, col) {
     const winnerPresent = GameBoard.checkMatch(tile, row, col);
@@ -123,23 +124,35 @@ const Game = (function() {
     if (GameBoard.getTileCount() === 9) {
       gameStatus = 3;
       console.log("Tie game.");
+      return;
+    }
+
+    player = (player === 'X' ? 'O' : 'X');
+  }
+
+  function playTurn(element) {
+    const row = Math.floor(element.dataset.id / 3);
+    const col = element.dataset.id % 3;
+
+    if (GameBoard.place(player, row, col)) {
+      updateGameStatus(player, row, col);
+    } else {
+      // Prompt player to select a different cell
     }
   }
 
   function start() {
-    while (gameStatus === 0) {
-      let row, col;
-      do {
-        row = prompt(`${player}'s turn. Please select a row.`);
-        col = prompt(`${player}'s turn. Please select a column.`);
-      } while (row >= 3 || row < 0
-              || col <= 3 || col < 0
-              || !GameBoard.place(player, row, col));
-
-      updateGameStatus(player, row, col);
-      player = (player === 'X' ? 'O' : 'X');
-    }
+    /* 
+     * Attach event listeners to each of the tiles
+     */
+    const tiles = document.querySelectorAll(".board > div");
+    tiles.forEach((tile) => {
+      tile.addEventListener("click", () => {
+        playTurn(tile);
+      });
+    });
   }
 
   return { start }
 })();
+
