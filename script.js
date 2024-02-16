@@ -77,8 +77,6 @@ const GameBoard = (function() {
    */
   function place(tile, row, column) {
     if (board[row][column] !== null) {
-      console.log(`There is already an '${board[row][column]}' at ${row}, ${column}`);
-      console.log("Please choose another spot!");
       return false;
     }
 
@@ -119,21 +117,34 @@ const Game = (function() {
     const winnerPresent = GameBoard.checkMatch(tile, row, col);
     if (winnerPresent && tile === 'X') {
       gameStatus = 1;
-      console.log("Player one won!");
       return;
     } else if (winnerPresent) {
       gameStatus = 2;
-      console.log("Player two one!");
       return;
     }
 
     if (GameBoard.getTileCount() === 9) {
       gameStatus = 3;
-      console.log("Tie game.");
       return;
     }
 
     player = (player === 'X' ? 'O' : 'X');
+  }
+
+  function updateMessage() {
+    const msg = document.querySelector(".message");
+    switch (gameStatus) {
+      case 0:
+        msg.textContent = `${player}'S TURN. SELECT A CELL.`;
+        break;
+      case 1:
+      case 2:
+        msg.textContent = `${player}'S WON! PLAY AGAIN?`;
+        break;
+      case 3:
+        msg.textContent = `TIE GAME. PLAY AGAIN?`;
+        break;
+    }
   }
 
   function playTurn() {
@@ -144,6 +155,7 @@ const Game = (function() {
     if (GameBoard.place(player, row, col)) {
       updateBoardDisplay(id);
       updateGameStatus(player, row, col);
+      updateMessage();
     }
 
     this.removeEventListener('click', playTurn);
