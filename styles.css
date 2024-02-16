@@ -41,11 +41,19 @@
 }
 
 .board > div {
+  box-sizing: border-box;
   aspect-ratio: 1 / 1;
   border-radius: 0.5rem;
   background-color: rgba(0,0,0,0.25);
+  padding: 1rem;
+  line-height: 0;
 }
 
 .board > div:hover {
   background-color: rgba(0,0,0,0.5);
+}
+
+.board > div > svg {
+  height: 100%;
+  width: 100%;
 }
