@@ -4,7 +4,7 @@ const GameBoard = (function() {
     [null, null, null],
     [null, null, null]
   ];
-  let tilesPlaced = 0;
+  let tileCount = 0;
 
   function checkRowMatch(tile, row) {
     for (let i = 0; i < 3; i++) {
@@ -65,6 +65,13 @@ const GameBoard = (function() {
   }
 
   /*
+   * Returns the number of tiles on the board
+   */
+  function getTileCount() {
+    return tileCount;
+  }
+
+  /*
    * Places a tile at the provided cell if the cell is free, returns true on 
    * successful placement otherwise returns false.
    */
@@ -76,7 +83,7 @@ const GameBoard = (function() {
     }
 
     board[row][column] = tile;
-    tilesPlaced++;
+    tileCount++;
     console.log(board[0]);
     console.log(board[1]);
     console.log(board[2]);
@@ -84,7 +91,7 @@ const GameBoard = (function() {
     return true;
   }
 
-  return { place, checkMatch };
+  return { place, checkMatch, getTileCount };
 })();
 
 const Game = (function() {
@@ -95,6 +102,7 @@ const Game = (function() {
    *              3: Tie game
    */
   let gameStatus = 0;
+  let player = 'X'
 
   /*
    * Updates the game status by checking if a player has won based on the most
@@ -102,33 +110,34 @@ const Game = (function() {
    */
   function updateGameStatus(tile, row, col) {
     const winnerPresent = GameBoard.checkMatch(tile, row, col);
-    if (winnerPresent && tile === 'x') {
+    if (winnerPresent && tile === 'X') {
       gameStatus = 1;
       console.log("Player one won!");
+      return;
     } else if (winnerPresent) {
       gameStatus = 2;
       console.log("Player two one!");
+      return;
+    }
+
+    if (GameBoard.getTileCount() === 9) {
+      gameStatus = 3;
+      console.log("Tie game.");
     }
   }
 
   function start() {
     while (gameStatus === 0) {
-      let playerOneRow, playerOneCol;
-      let playerTwoRow, playerTwoCol;
-
+      let row, col;
       do {
-        playerOneRow = prompt("X's turn. Please select a row.");
-        playerOneCol = prompt("X's turn. Please select a column.");
-      } while (!GameBoard.place('x', playerOneRow, playerOneCol));
+        row = prompt(`${player}'s turn. Please select a row.`);
+        col = prompt(`${player}'s turn. Please select a column.`);
+      } while (row >= 3 || row < 0
+              || col <= 3 || col < 0
+              || !GameBoard.place(player, row, col));
 
-      updateGameStatus('x', playerOneRow, playerOneCol);
-
-      do {
-        playerTwoRow = prompt("O's turn. Please select a row.");
-        playerTwoCol = prompt("O's turn. Please select a column.");
-      } while (!GameBoard.place('o', playerTwoRow, playerTwoCol));
-
-      updateGameStatus('o', playerTwoRow, playerTwoCol);
+      updateGameStatus(player, row, col);
+      player = (player === 'X' ? 'O' : 'X');
     }
   }
 
