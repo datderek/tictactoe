@@ -156,12 +156,16 @@ const Game = (function() {
       }
 
       playAgain.classList.remove("hidden");
+      const tiles = document.querySelectorAll(".board > div");
+      tiles.forEach((tile) => tile.removeEventListener("click", playTurn))
       return;
     }
 
     if (GameBoard.getTileCount() === 9) {
       gameStatus = 3;
       playAgain.classList.remove("hidden");
+      const tiles = document.querySelectorAll(".board > div");
+      tiles.forEach((tile) => tile.removeEventListener("click", playTurn))
       return;
     }
 
