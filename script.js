@@ -86,7 +86,14 @@ const GameBoard = (function() {
     return true;
   }
 
-  return { place, checkMatch, getTileCount };
+  function reset() {
+    tileCount = 0;
+    board.forEach((row) => {
+      row.fill(null);
+    })
+  }
+
+  return { place, checkMatch, getTileCount, reset };
 })();
 
 const Game = (function() {
@@ -169,6 +176,22 @@ const Game = (function() {
     tiles.forEach((tile) => tile.addEventListener("click", playTurn))
   }
 
-  return { start }
+  function resetBoardDisplay() {
+    const tiles = document.querySelectorAll(".board > div");
+    tiles.forEach((tile) => {
+      tile.innerHTML = "";
+    })
+  }
+
+  function reset() {
+    GameBoard.reset();
+    resetBoardDisplay();
+    gameStatus = 0;
+    player = 'X';
+    updateMessage();
+    Game.start();
+  }
+
+  return { start, reset }
 })();
 
