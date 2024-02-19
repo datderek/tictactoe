@@ -8,6 +8,7 @@
   margin: 0;
   padding: 0;
   font-weight: bold;
+  text-transform: uppercase;
 }
 
 body {
@@ -75,7 +76,6 @@ body {
   border: 1px solid black;
   padding: 0.25rem 0.5rem;
   border-radius: 0.5rem;
-  text-transform: uppercase;
 }
 
 .players-form button {
@@ -93,8 +93,23 @@ body {
 }
 
 /*
- * Game Board Section
+ * Game Section
  */
+.game {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.score {
+  flex: 0 0 0;
+}
+
+.score:first-child {
+  text-align: right;
+}
+
 .board {
   display: grid;
   grid-template-columns: repeat(3, minmax(100px, 175px));

@@ -131,6 +131,8 @@ const Game = (function() {
    */
   let gameStatus = 0;
   let player = 'X'
+  let playerOneScore = 0;
+  let playerTwoScore = 0;
 
   /*
    * Updates the game status by checking if a player has won based on the most
@@ -139,11 +141,16 @@ const Game = (function() {
    */
   function updateGameStatus(tile, row, col) {
     const winnerPresent = GameBoard.checkMatch(tile, row, col);
+    const scoreDisplay = document.querySelectorAll(".points");
     if (winnerPresent && tile === 'X') {
       gameStatus = 1;
+      playerOneScore++;
+      scoreDisplay[0].textContent = playerOneScore;
       return;
     } else if (winnerPresent) {
       gameStatus = 2;
+      playerTwoScore++;
+      scoreDisplay[1].textContent = playerTwoScore;
       return;
     }
 
@@ -191,7 +198,16 @@ const Game = (function() {
 
     this.removeEventListener('click', playTurn);
   }
-  
+
+  /*
+   * Sets the player names
+   */
+  function setPlayers(playerOneName, playerTwoName) {
+    const playerNames = document.querySelectorAll(".player-name");
+    playerNames[0].textContent = playerOneName;
+    playerNames[1].textContent = playerTwoName;
+  }
+
   /*
    * Starts the game
    */
@@ -214,19 +230,22 @@ const Game = (function() {
     Game.start();
   }
 
-  return { start, reset }
+  return { setPlayers, start, reset }
 })();
 
 const form = document.querySelector(".players-form");
 const message = document.querySelector(".message");
-const board = document.querySelector(".board");
+const game = document.querySelector(".game");
 
 form.addEventListener("submit", (event) => {
   event.preventDefault();
+  const formData = new FormData(form);
+  Game.setPlayers(formData.get("playerOne"), formData.get("playerTwo"));
 
   form.classList.add("hidden");
   message.classList.remove("hidden");
-  board.classList.remove("hidden");
+  game.classList.remove("hidden");
+
   Game.start();
 })
 
