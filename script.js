@@ -72,6 +72,28 @@ const GameBoard = (function() {
   }
 
   /*
+   * Updates the display with either the 'X' or 'O' symbol depending on the player
+   */
+  function updateDisplay(id, player) {
+    const tile = document.querySelector(`[data-id="${id}"]`);
+    if (player === "X") {
+      tile.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg>';
+    } else {
+      tile.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M480.276-96Q401-96 331-126q-70-30-122.5-82.5T126-330.958q-30-69.959-30-149.5Q96-560 126-629.5t82.5-122Q261-804 330.958-834q69.959-30 149.5-30Q560-864 629.5-834t122 82.5Q804-699 834-629.276q30 69.725 30 149Q864-401 834-331q-30 70-82.5 122.5T629.276-126q-69.725 30-149 30ZM480-168q130 0 221-91t91-221q0-130-91-221t-221-91q-130 0-221 91t-91 221q0 130 91 221t221 91Zm0-312Z"/></svg>';
+    }
+  }
+
+  /*
+   * Resets the visual grid by removing the svgs
+   */
+  function resetDisplay() {
+    const tiles = document.querySelectorAll(".board > div");
+    tiles.forEach((tile) => {
+      tile.innerHTML = "";
+    })
+  }
+
+  /*
    * Places a tile at the provided cell if the cell is free, returns true on 
    * successful placement otherwise returns false.
    */
@@ -86,14 +108,18 @@ const GameBoard = (function() {
     return true;
   }
 
+  /*
+   * Resets the Gameboard
+   */
   function reset() {
     tileCount = 0;
     board.forEach((row) => {
       row.fill(null);
-    })
+    });
+    resetDisplay();
   }
 
-  return { place, checkMatch, getTileCount, reset };
+  return { checkMatch, getTileCount, place, reset, updateDisplay };
 })();
 
 const Game = (function() {
@@ -105,15 +131,6 @@ const Game = (function() {
    */
   let gameStatus = 0;
   let player = 'X'
-
-  function updateBoardDisplay(id) {
-    const tile = document.querySelector(`[data-id="${id}"]`);
-    if (player === "X") {
-      tile.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg>';
-    } else {
-      tile.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M480.276-96Q401-96 331-126q-70-30-122.5-82.5T126-330.958q-30-69.959-30-149.5Q96-560 126-629.5t82.5-122Q261-804 330.958-834q69.959-30 149.5-30Q560-864 629.5-834t122 82.5Q804-699 834-629.276q30 69.725 30 149Q864-401 834-331q-30 70-82.5 122.5T629.276-126q-69.725 30-149 30ZM480-168q130 0 221-91t91-221q0-130-91-221t-221-91q-130 0-221 91t-91 221q0 130 91 221t221 91Zm0-312Z"/></svg>';
-    }
-  }
 
   /*
    * Updates the game status by checking if a player has won based on the most
@@ -138,6 +155,9 @@ const Game = (function() {
     player = (player === 'X' ? 'O' : 'X');
   }
 
+  /*
+   * Updates the message in the header
+   */
   function updateMessage() {
     const msg = document.querySelector(".message");
     switch (gameStatus) {
@@ -154,20 +174,27 @@ const Game = (function() {
     }
   }
 
+  /*
+   * Simulates a turn by placing the tile, updating the game status, and updating
+   * the turn message in the header
+   */
   function playTurn() {
     const id = this.dataset.id;
     const row = Math.floor(id / 3);
     const col = id % 3;
 
     if (GameBoard.place(player, row, col)) {
-      updateBoardDisplay(id);
+      GameBoard.updateDisplay(id, player);
       updateGameStatus(player, row, col);
       updateMessage();
     }
 
     this.removeEventListener('click', playTurn);
   }
-
+  
+  /*
+   * Starts the game
+   */
   function start() {
     /* 
      * Attach event listeners to each of the tiles
@@ -176,16 +203,11 @@ const Game = (function() {
     tiles.forEach((tile) => tile.addEventListener("click", playTurn))
   }
 
-  function resetBoardDisplay() {
-    const tiles = document.querySelectorAll(".board > div");
-    tiles.forEach((tile) => {
-      tile.innerHTML = "";
-    })
-  }
-
+  /*
+   * Resets the game
+   */
   function reset() {
     GameBoard.reset();
-    resetBoardDisplay();
     gameStatus = 0;
     player = 'X';
     updateMessage();
