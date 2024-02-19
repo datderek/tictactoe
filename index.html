@@ -4,15 +4,29 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="./styles.css">
-  <title>Tic-Tac-Toe</title>
+  <title>TIC TAC TOE</title>
 </head>
 <body>
   <main class="main">
     <div class="header">
       <h1>TIC TAC TOE</h1>
-      <p class="message">X'S TURN. SELECT A CELL.</p>
+      <p class="message hidden">X'S TURN. SELECT A CELL.</p>
+      <form class="players-form">
+        <h3>PLEASE PROVIDE A NAME FOR EACH PLAYER.</h3>
+        <div>
+          <label for="playerOne">PLAYER ONE</label>
+          <input type="text" name="playerOne" id="playerOne" required>
+        </div>
+  
+        <div>
+          <label for="playerTwo">PLAYER TWO</label>
+          <input type="text" name="playerTwo" id="playerTwo" required>
+        </div>
+  
+        <button type="submit">START</button>
+      </form>
     </div>
-    <div class="board">
+    <div class="board hidden">
       <div data-id="0"></div>
       <div data-id="1"></div>
       <div data-id="2"></div>

@@ -217,3 +217,16 @@ const Game = (function() {
   return { start, reset }
 })();
 
+const form = document.querySelector(".players-form");
+const message = document.querySelector(".message");
+const board = document.querySelector(".board");
+
+form.addEventListener("submit", (event) => {
+  event.preventDefault();
+
+  form.classList.add("hidden");
+  message.classList.remove("hidden");
+  board.classList.remove("hidden");
+  Game.start();
+})
+

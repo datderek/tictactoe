@@ -7,6 +7,7 @@
 * {
   margin: 0;
   padding: 0;
+  font-weight: bold;
 }
 
 body {
@@ -24,6 +25,13 @@ body {
   gap: 1rem;
 }
 
+.hidden {
+  visibility: hidden;
+}
+
+/*
+ * Header Section
+ */
 .header { 
   text-align: center;
 }
@@ -41,9 +49,52 @@ body {
 
 .message {
   letter-spacing: -0.025em;
-  font-weight: bold;
+}
+/*
+ * Form Section
+ */
+.players-form {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  font-size: 1.125rem;
 }
 
+.players-form label {
+  display: block;
+  text-align: start;
+}
+
+.players-form input {
+  font-weight: normal;
+  border: 1px solid black;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.5rem;
+  text-transform: uppercase;
+}
+
+.players-form button {
+  font-size: inherit;
+  background-color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid black;
+  transition: background-color 100ms ease, color 100ms ease;
+}
+
+.players-form button:hover {
+  background-color: black;
+  color: white;
+}
+
+/*
+ * Game Board Section
+ */
 .board {
   display: grid;
   grid-template-columns: repeat(3, minmax(100px, 175px));
@@ -57,6 +108,7 @@ body {
   background-color: rgba(0,0,0,0.25);
   padding: 1rem;
   line-height: 0;
+  transition: background-color 100ms ease-in;
 }
 
 .board > div:hover {
