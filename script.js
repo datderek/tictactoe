@@ -130,7 +130,7 @@ const Game = (function() {
    *              3: Tie game
    */
   let gameStatus = 0;
-  let player = 'X'
+  let player = 'X';
   let playerOneScore = 0;
   let playerTwoScore = 0;
 
@@ -142,20 +142,24 @@ const Game = (function() {
   function updateGameStatus(tile, row, col) {
     const winnerPresent = GameBoard.checkMatch(tile, row, col);
     const scoreDisplay = document.querySelectorAll(".points");
-    if (winnerPresent && tile === 'X') {
-      gameStatus = 1;
-      playerOneScore++;
-      scoreDisplay[0].textContent = playerOneScore;
-      return;
-    } else if (winnerPresent) {
-      gameStatus = 2;
-      playerTwoScore++;
-      scoreDisplay[1].textContent = playerTwoScore;
+    if (winnerPresent) {
+      if (tile === 'X') {
+        gameStatus = 1;
+        playerOneScore++;
+        scoreDisplay[0].textContent = playerOneScore;
+      } else {
+        gameStatus = 2;
+        playerTwoScore++;
+        scoreDisplay[1].textContent = playerTwoScore;
+      }
+
+      playAgain.classList.remove("hidden");
       return;
     }
 
     if (GameBoard.getTileCount() === 9) {
       gameStatus = 3;
+      playAgain.classList.remove("hidden");
       return;
     }
 
@@ -227,6 +231,7 @@ const Game = (function() {
     gameStatus = 0;
     player = 'X';
     updateMessage();
+    playAgain.classList.add("hidden");
     Game.start();
   }
 
@@ -236,6 +241,7 @@ const Game = (function() {
 const form = document.querySelector(".players-form");
 const message = document.querySelector(".message");
 const game = document.querySelector(".game");
+const playAgain = document.querySelector(".play-again")
 
 form.addEventListener("submit", (event) => {
   event.preventDefault();
@@ -247,5 +253,9 @@ form.addEventListener("submit", (event) => {
   game.classList.remove("hidden");
 
   Game.start();
+})
+
+playAgain.addEventListener("click", () => {
+  Game.reset();
 })
 
